@@ -9,7 +9,7 @@ const Login = () => {
       <Navbar />
       
       <main className="flex-grow flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md animate-scale-in backdrop-blur-sm">
+        <div className="w-full max-w-md animate-scale-in">
           <AuthForm type="login" />
         </div>
       </main>
