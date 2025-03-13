@@ -9,7 +9,7 @@ const Register = () => {
       <Navbar />
       
       <main className="flex-grow flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md animate-scale-in">
+        <div className="w-full max-w-md animate-scale-in backdrop-blur-sm">
           <AuthForm type="register" />
         </div>
       </main>
