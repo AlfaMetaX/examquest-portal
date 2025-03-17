@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { authService } from '@/services/api';
 
 interface AuthFormProps {
   type: 'login' | 'register';
@@ -36,27 +37,29 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, className }) => {
     setIsLoading(true);
     
     try {
-      // Simulate authentication request
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, just set a token in localStorage
-      localStorage.setItem('authToken', 'demo-token');
-      localStorage.setItem('userName', type === 'register' ? name : 'User');
-      
-      toast({
-        title: type === 'login' ? "Welcome back!" : "Account created",
-        description: type === 'login' 
-          ? "You've successfully logged in." 
-          : "Your account has been created successfully.",
-      });
+      if (type === 'login') {
+        const response = await authService.login(email, password);
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('userName', response.user.name);
+        
+        toast({
+          title: "Welcome back!",
+          description: "You've successfully logged in.",
+        });
+      } else {
+        const response = await authService.register(name, email, password);
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('userName', response.user.name);
+        
+        toast({
+          title: "Account created",
+          description: "Your account has been created successfully.",
+        });
+      }
       
       navigate('/dashboard');
     } catch (error) {
-      toast({
-        title: "Authentication Error",
-        description: "There was a problem with your request. Please try again.",
-        variant: "destructive",
-      });
+      // Error handling is done in the apiRequest function
     } finally {
       setIsLoading(false);
     }

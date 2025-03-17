@@ -1,27 +1,34 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/navbar/Navbar';
 import DashboardComponent from '@/components/dashboard/Dashboard';
 import { useToast } from '@/components/ui/use-toast';
+import { authService } from '@/services/api';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     // Check if user is authenticated
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
+    if (!authService.isAuthenticated()) {
       toast({
         title: "Authentication Required",
         description: "Please log in to access this page",
         variant: "destructive",
       });
       navigate('/login');
+      return;
     }
+    
+    setIsLoading(false);
   }, [navigate, toast]);
+  
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
   
   return (
     <div className="min-h-screen flex flex-col">
